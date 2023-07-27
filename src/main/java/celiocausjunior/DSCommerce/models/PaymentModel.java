@@ -2,47 +2,39 @@ package celiocausjunior.DSCommerce.models;
 
 import java.time.Instant;
 
-import celiocausjunior.DSCommerce.models.enums.OrderStatus;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "tb_orders")
-public class OrderModel {
-
+@Table(name = "tb_payments")
+public class PaymentModel {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant moment;
-    private OrderStatus status;
-    
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private UserModel client;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private PaymentModel payment;
+    @OneToOne
+    @MapsId
+    private OrderModel order;
 
-    public OrderModel() {
+
+    public PaymentModel() {
     }
 
-    public OrderModel(Long id, Instant moment, OrderStatus status, UserModel client, PaymentModel payment) {
+    public PaymentModel(Long id, Instant moment, OrderModel order) {
         this.id = id;
         this.moment = moment;
-        this.status = status;
-        this.client = client;
-        this.payment = payment;
+        this.order = order;
     }
 
     public Long getId() {
@@ -61,28 +53,12 @@ public class OrderModel {
         this.moment = moment;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderModel getOrder() {
+        return order;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public UserModel getClient() {
-        return client;
-    }
-
-    public void setClient(UserModel client) {
-        this.client = client;
-    }
-
-    public PaymentModel getPayment() {
-        return payment;
-    }
-
-    public void setPayment(PaymentModel payment) {
-        this.payment = payment;
+    public void setOrder(OrderModel order) {
+        this.order = order;
     }
 
     @Override
@@ -101,7 +77,7 @@ public class OrderModel {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        OrderModel other = (OrderModel) obj;
+        PaymentModel other = (PaymentModel) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -109,4 +85,6 @@ public class OrderModel {
             return false;
         return true;
     }
+
+    
 }
