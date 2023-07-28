@@ -26,15 +26,11 @@ public class ProductModel {
     @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
-    private String imageUri;
+    private String imgUrl;
 
     @ManyToMany
-    @JoinTable(name = "tb_product_category",
-    joinColumns = @jakarta.persistence.JoinColumn(name = "product_id"),
-    inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "category_id")
-    )
+    @JoinTable(name = "tb_product_category", joinColumns = @jakarta.persistence.JoinColumn(name = "product_id"), inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "category_id"))
     private Set<CategoryModel> categories = new HashSet<>();
-
 
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
@@ -42,12 +38,12 @@ public class ProductModel {
     public ProductModel() {
     }
 
-    public ProductModel(Long id, String name, String description, Double price, String imageUri) {
+    public ProductModel(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imageUri = imageUri;
+        this.imgUrl = imgUrl;
     }
 
     public Long getId() {
@@ -82,19 +78,11 @@ public class ProductModel {
         this.price = price;
     }
 
-    public String getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
-    }
-
     public Set<CategoryModel> getCategories() {
         return categories;
     }
 
-        public Set<OrderItem> getItems() {
+    public Set<OrderItem> getItems() {
         return items;
     }
 
@@ -102,6 +90,13 @@ public class ProductModel {
         return items.stream().map(x -> x.getOrder()).toList();
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     @Override
     public int hashCode() {
@@ -127,6 +122,5 @@ public class ProductModel {
             return false;
         return true;
     }
-
 
 }
