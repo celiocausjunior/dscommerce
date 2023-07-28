@@ -1,6 +1,7 @@
 package celiocausjunior.DSCommerce.models;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,6 +34,10 @@ public class ProductModel {
     inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "category_id")
     )
     private Set<CategoryModel> categories = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
 
     public ProductModel() {
     }
@@ -88,6 +94,15 @@ public class ProductModel {
         return categories;
     }
 
+        public Set<OrderItem> getItems() {
+        return items;
+    }
+
+    public List<OrderModel> getOrders() {
+        return items.stream().map(x -> x.getOrder()).toList();
+    }
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -112,5 +127,6 @@ public class ProductModel {
             return false;
         return true;
     }
+
 
 }
