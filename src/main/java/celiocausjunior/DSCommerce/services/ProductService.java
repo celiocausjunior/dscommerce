@@ -35,7 +35,6 @@ public class ProductService {
         return new ProductDTO(product);
     }
 
-
     @Transactional
     public ProductDTO update(Long id, ProductDTO productDTO) {
 
@@ -44,12 +43,23 @@ public class ProductService {
         product = productRepository.save(product);
         return new ProductDTO(product);
     }
-    private void copyDtoToEntity(ProductDTO productDTO, ProductModel product){
+
+    @Transactional
+    public void delete(Long id) {
+        ProductModel product = productRepository.getReferenceById(id);
+        if (product != null) {
+            productRepository.deleteById(id);
+        }
+        else{
+            throw new RuntimeException("Product not found");
+        }
+    }
+
+    private void copyDtoToEntity(ProductDTO productDTO, ProductModel product) {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
     }
-
 
 }
