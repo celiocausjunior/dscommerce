@@ -6,12 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import celiocausjunior.DSCommerce.models.ProductModel;
 import celiocausjunior.DSCommerce.models.dtos.ProductDTO;
 import celiocausjunior.DSCommerce.repositories.ProductRepository;
 
 @Service
 public class ProductService {
-    
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -20,10 +21,25 @@ public class ProductService {
         return productRepository.findById(id).map(product -> new ProductDTO(product)).orElse(null);
     }
 
-
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         Page<ProductDTO> page = productRepository.findAll(pageable).map(product -> new ProductDTO(product));
         return page;
+    }
+
+    @Transactional
+    public ProductDTO insert(ProductDTO productDTO) {
+
+        ProductModel product = new ProductModel();
+        copyDtoToEntity(productDTO, product);
+        product = productRepository.save(product);
+        return new ProductDTO(product);
+    }
+
+    private void copyDtoToEntity(ProductDTO productDTO, ProductModel product){
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setImgUrl(productDTO.getImgUrl());
     }
 }
