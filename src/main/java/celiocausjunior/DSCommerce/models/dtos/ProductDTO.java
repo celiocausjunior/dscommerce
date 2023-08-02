@@ -1,11 +1,20 @@
 package celiocausjunior.DSCommerce.models.dtos;
 
 import celiocausjunior.DSCommerce.models.ProductModel;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public class ProductDTO {
     private Long id;
+
+    @NotBlank(message = "O campo nome não pode ser vazio")
+    @Size(min = 3, max = 80, message = "O campo nome deve ter entre 3 e 100 caracteres")
     private String name;
+    
+    @Size(min=10, message = "O campo descrição deve ter no mínimo 10 caracteres")
     private String description;
+    @Positive(message = "O preço deve ser um valor positivo")
     private Double price;
     private String imgUrl;
 
