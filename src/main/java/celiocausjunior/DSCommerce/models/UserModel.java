@@ -2,6 +2,8 @@ package celiocausjunior.DSCommerce.models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -9,6 +11,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -29,6 +34,13 @@ public class UserModel {
    
     private LocalDate birthDate;
     private String password;
+
+
+    @ManyToMany
+    @JoinTable(name = "tb_users_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleModel> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "client")
     private List<OrderModel> orders = new ArrayList<>();
@@ -109,6 +121,19 @@ public class UserModel {
 
         public List<OrderModel> getOrders() {
         return orders;
+    }
+
+    public void addRole(RoleModel role) {
+        roles.add(role);
+    }
+
+    public boolean hasRole(String roleName) {
+        for (RoleModel role : roles) {
+            if (role.getAuthority().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
