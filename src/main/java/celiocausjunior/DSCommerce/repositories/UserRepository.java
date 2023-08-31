@@ -4,18 +4,19 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import celiocausjunior.DSCommerce.interfaces.UserDetailsProjection;
 import celiocausjunior.DSCommerce.models.UserModel;
 
-public interface UserRepository extends JpaRepository<UserModel, Long>{
-    
-    @Query(nativeQuery = true, value = """
-			SELECT tb_user.email AS username, tb_user.password, tb_role.id AS roleId, tb_role.authority
-			FROM tb_user
-			INNER JOIN tb_user_role ON tb_user.id = tb_user_role.user_id
-			INNER JOIN tb_role ON tb_role.id = tb_user_role.role_id
-			WHERE tb_user.email = :email
-		""")
-List<UserDetailsProjection> searchUserAndRolesByEmail(String email);
+public interface UserRepository extends JpaRepository<UserModel, Long> {
+
+    @Query(nativeQuery = true, value =
+            "SELECT tb_users.email AS username, tb_users.password, tb_roles.id AS roleId, tb_roles.authority " +
+            "FROM tb_users " +
+            "INNER JOIN tb_users_roles ON tb_users.id = tb_users_roles.users_id " +
+            "INNER JOIN tb_roles ON tb_roles.id = tb_users_roles.roles_id " +
+            "WHERE tb_users.email = :email"
+    )
+    List<UserDetailsProjection> searchUserAndRolesByEmail(@Param("email") String email);
 }

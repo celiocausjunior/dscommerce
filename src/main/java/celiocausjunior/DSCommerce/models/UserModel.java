@@ -43,8 +43,8 @@ public class UserModel implements UserDetails {
 
     @ManyToMany
     @JoinTable(name = "tb_users_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    joinColumns = @JoinColumn(name = "users_id"),
+    inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<RoleModel> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "client")
