@@ -2,8 +2,13 @@ package celiocausjunior.DSCommerce.models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -19,7 +24,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_users")
-public class UserModel {
+public class UserModel implements UserDetails {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -160,6 +165,44 @@ public class UserModel {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+    }
+
+
+    @Override
+    public String getUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+      return true;
+    }
+
+
+    @Override
+    public boolean isAccountNonLocked() {
+      return true;
+    }
+
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+         return true;
+    }
+
+
+    @Override
+    public boolean isEnabled() {
+         return true;
     }
 
 

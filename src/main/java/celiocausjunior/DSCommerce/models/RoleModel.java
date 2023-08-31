@@ -1,5 +1,7 @@
 package celiocausjunior.DSCommerce.models;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_roles")
-public class RoleModel {
+public class RoleModel implements GrantedAuthority {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +35,7 @@ public class RoleModel {
         this.id = id;
     }
 
+    @Override // This method is from GrantedAuthority interface
     public String getAuthority() {
         return authority;
     }
