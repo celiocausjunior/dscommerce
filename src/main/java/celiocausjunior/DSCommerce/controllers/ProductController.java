@@ -20,7 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import celiocausjunior.DSCommerce.models.dtos.ProductDTO;
 import celiocausjunior.DSCommerce.services.ProductService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,7 +29,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-   @RolesAllowed({ "ROLE_OPERATOR", "ROLE_ADMIN" })
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
         ProductDTO dto = productService.findById(id);
