@@ -1,7 +1,11 @@
 package celiocausjunior.DSCommerce.models.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import celiocausjunior.DSCommerce.models.ProductModel;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -17,6 +21,11 @@ public class ProductDTO {
     @Positive(message = "O preço deve ser um valor positivo")
     private Double price;
     private String imgUrl;
+
+    @NotEmpty(message = "O produto deve ter pelo menos uma categoria")
+    private List<CategoryDTO> categories = new ArrayList<>();
+
+
 
     public ProductDTO() {
     }
@@ -35,6 +44,7 @@ public class ProductDTO {
         description = entity.getDescription();
         price = entity.getPrice();
         imgUrl = entity.getImgUrl();
+        entity.getCategories().forEach(category -> this.categories.add(new CategoryDTO(category)));
     }
 
     public Long getId() {
@@ -77,5 +87,8 @@ public class ProductDTO {
         this.imgUrl = imgUrl;
     }
 
+    public List<CategoryDTO> getCategories() {
+        return categories;
+    }
     
 }

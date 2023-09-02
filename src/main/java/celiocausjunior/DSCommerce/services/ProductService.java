@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import celiocausjunior.DSCommerce.models.CategoryModel;
 import celiocausjunior.DSCommerce.models.ProductModel;
+import celiocausjunior.DSCommerce.models.dtos.CategoryDTO;
 import celiocausjunior.DSCommerce.models.dtos.ProductDTO;
 import celiocausjunior.DSCommerce.models.dtos.ProductMinDTO;
 import celiocausjunior.DSCommerce.repositories.ProductRepository;
@@ -24,7 +26,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        return productRepository.findById(id).map(product -> new ProductDTO(product)).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return productRepository.findById(id).map(product -> new ProductDTO(product))
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Transactional(readOnly = true)
@@ -61,11 +64,10 @@ public class ProductService {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
         try {
-                productRepository.deleteById(id);    		
+            productRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Falha de integridade referencial");
         }
-            catch (DataIntegrityViolationException e) {
-                throw new DataIntegrityException("Falha de integridade referencial");
-           }
     }
 
     private void copyDtoToEntity(ProductDTO productDTO, ProductModel product) {
@@ -73,6 +75,14 @@ public class ProductService {
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
+
+        for (CategoryDTO catDTO : productDTO.getCategories()) {
+            CategoryModel cat = new CategoryModel();
+            cat.setId(catDTO.getId());
+
+            product.getCategories().add(cat);
+        }
+
     }
 
 }
