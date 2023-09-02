@@ -76,6 +76,7 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
 
+        product.getCategories().clear();
         for (CategoryDTO catDTO : productDTO.getCategories()) {
             CategoryModel cat = new CategoryModel();
             cat.setId(catDTO.getId());
