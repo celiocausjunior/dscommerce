@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import celiocausjunior.DSCommerce.models.ProductModel;
 import celiocausjunior.DSCommerce.models.dtos.ProductDTO;
+import celiocausjunior.DSCommerce.models.dtos.ProductMinDTO;
 import celiocausjunior.DSCommerce.repositories.ProductRepository;
 import celiocausjunior.DSCommerce.services.exceptions.DataIntegrityException;
 import celiocausjunior.DSCommerce.services.exceptions.ResourceNotFoundException;
@@ -27,9 +28,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(String name, Pageable pageable) {
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
         Page<ProductModel> page = productRepository.findByNameContainingIgnoreCase(name, pageable);
-        return page.map(product -> new ProductDTO(product));
+        return page.map(product -> new ProductMinDTO(product));
     }
 
     @Transactional
