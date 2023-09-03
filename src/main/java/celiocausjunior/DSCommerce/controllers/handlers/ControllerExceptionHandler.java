@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import celiocausjunior.DSCommerce.models.dtos.CustomErrorDTO;
 import celiocausjunior.DSCommerce.models.dtos.ValidationErrorDTO;
 import celiocausjunior.DSCommerce.services.exceptions.DataIntegrityException;
+import celiocausjunior.DSCommerce.services.exceptions.ForbiddenException;
 import celiocausjunior.DSCommerce.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -26,7 +27,7 @@ public class ControllerExceptionHandler {
 
 
     @ExceptionHandler(DataIntegrityException.class)
-    public ResponseEntity<CustomErrorDTO> dataIntegrityExceprion (DataIntegrityException e, HttpServletRequest request){
+    public ResponseEntity<CustomErrorDTO> dataIntegrityException (DataIntegrityException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         CustomErrorDTO error = new CustomErrorDTO(Instant.now(), status.value(),  e.getMessage(), request.getRequestURI());  
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -42,5 +43,12 @@ public class ControllerExceptionHandler {
         }
         
         return ResponseEntity.status(status).body(error);
+    }
+
+        @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomErrorDTO> forbiddenException (ForbiddenException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        CustomErrorDTO error = new CustomErrorDTO(Instant.now(), status.value(),  e.getMessage(), request.getRequestURI());  
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }

@@ -24,41 +24,44 @@ public class OrderService {
   @Autowired
   private UserService userService;
 
-    @Autowired
-    private OrderRepository orderRepository;
+  @Autowired
+  private OrderRepository orderRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+  @Autowired
+  private ProductRepository productRepository;
 
-    @Autowired
-    private OrderItemRepository orderItemRepository;
+  @Autowired
+  private OrderItemRepository orderItemRepository;
 
-      @Transactional(readOnly = true)
-    public OrderDTO findById(Long id) {
-        return orderRepository.findById(id).map(order -> new OrderDTO(order))
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+  @Autowired
+  private AuthService authService;
+
+  @Transactional(readOnly = true)
+  public OrderDTO findById(Long id) {
+    OrderModel order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+    authService.validateSelfOrAdmin(order.getClient().getId());
+    return new OrderDTO(order);
+  }
+
+  @Transactional
+  public OrderDTO insert(OrderDTO orderDTO) {
+    OrderModel order = new OrderModel();
+    order.setMoment(Instant.now());
+    order.setStatus(OrderStatus.WAITING_PAYMENT);
+
+    UserModel user = userService.authenticated();
+    order.setClient(user);
+
+    for (OrderItemDTO itemDTO : orderDTO.getItems()) {
+      ProductModel product = productRepository.getReferenceById(itemDTO.getProductId());
+      OrderItem item = new OrderItem(order, product, itemDTO.getQuantity(), product.getPrice());
+      order.getItems().add(item);
     }
 
-    @Transactional
-    public OrderDTO insert(OrderDTO orderDTO) {
-        OrderModel order = new OrderModel();
-        order.setMoment(Instant.now());
-        order.setStatus(OrderStatus.WAITING_PAYMENT);
-       
-        UserModel user = userService.authenticated();
-        order.setClient(user);
+    order = orderRepository.save(order);
+    orderItemRepository.saveAll(order.getItems());
 
-        for (OrderItemDTO itemDTO : orderDTO.getItems()) {
-            ProductModel product = productRepository.getReferenceById(itemDTO.getProductId());
-            OrderItem item = new OrderItem(order, product, itemDTO.getQuantity(), product.getPrice());
-            order.getItems().add(item);
-        }
+    return new OrderDTO(order);
+  }
 
-        order = orderRepository.save(order);
-        orderItemRepository.saveAll(order.getItems());
-
-        return new OrderDTO(order);
-    }
-
-    
 }
