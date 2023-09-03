@@ -6,6 +6,7 @@ import java.util.List;
 import celiocausjunior.DSCommerce.models.ProductModel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +19,7 @@ public class ProductDTO {
     
     @Size(min=10, message = "O campo descrição deve ter no mínimo 10 caracteres")
     private String description;
+    @NotNull(message = "O preço não pode ser nulo")
     @Positive(message = "O preço deve ser um valor positivo")
     private Double price;
     private String imgUrl;
