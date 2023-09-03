@@ -7,6 +7,7 @@ import java.util.List;
 import celiocausjunior.DSCommerce.models.OrderItem;
 import celiocausjunior.DSCommerce.models.OrderModel;
 import celiocausjunior.DSCommerce.models.enums.OrderStatus;
+import jakarta.validation.constraints.NotEmpty;
 
 public class OrderDTO {
     
@@ -18,6 +19,7 @@ public class OrderDTO {
 
     private PaymentDTO payment;
 
+    @NotEmpty(message = "Order items can't be empty")
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO() {
